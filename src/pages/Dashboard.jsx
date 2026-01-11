@@ -12,7 +12,7 @@ export default function Dashboard() {
     block: "C",
     floor: 2,
     roomNumber: 202,
-    capacity: 120,
+    capacity: 60,
   };
 
   useEffect(() => {
@@ -22,7 +22,6 @@ export default function Dashboard() {
       .catch((err) => console.error("Could not connect to backend:", err));
 
     socket.on("occupancyUpdate", (newCount) => {
-      console.log("Live Update Received:", newCount);
       setOccupied(newCount);
     });
 
@@ -47,41 +46,36 @@ export default function Dashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6 font-sans">
-      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-8 border border-gray-100">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6 font-sans">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 border border-gray-200">
         
-        <div className="flex items-center justify-between mb-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">Room Monitor</h2>
-            <p className="text-sm text-gray-500">Real-time classroom data</p>
+            <h2 className="text-3xl font-extrabold text-gray-900">Room Monitor</h2>
+            <p className="text-sm text-gray-500">Live classroom occupancy</p>
           </div>
           <div className="bg-indigo-100 p-3 rounded-xl">
-            <Users className="w-6 h-6 text-indigo-600" />
+            <Users className="w-7 h-7 text-indigo-600" />
           </div>
         </div>
 
-        <div className="space-y-3 mb-8">
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Location</span>
-            <span className="font-semibold text-gray-800">Block {classroom.block}, Floor {classroom.floor}</span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Room Number</span>
-            <span className="font-semibold text-gray-800">{classroom.roomNumber}</span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Total Capacity</span>
-            <span className="font-semibold text-gray-800">{classroom.capacity} seats</span>
-          </div>
+        {/* Big Occupancy Display */}
+        <div className="flex flex-col items-center justify-center mb-8">
+          <p className="text-gray-500 text-sm mb-2">Current Occupancy</p>
+          <p className="text-6xl font-bold text-indigo-600">{occupied}</p>
+          <p className="text-gray-400 mt-1 text-sm">
+            / {classroom.capacity} Seats
+          </p>
         </div>
 
-        {/* Progress Bar Section */}
+        {/* Progress Bar */}
         <div className="mb-8">
-          <div className="flex justify-between items-end mb-2">
-            <span className="text-sm font-bold text-gray-700">Occupancy Level</span>
-            <span className="text-2xl font-black text-indigo-600">{occupancyPercent}%</span>
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-sm font-semibold text-gray-700">Occupancy Level</span>
+            <span className="text-sm font-bold text-gray-700">{occupancyPercent}%</span>
           </div>
-          <div className="w-full bg-gray-100 rounded-full h-4 overflow-hidden">
+          <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
             <div
               className={`h-full transition-all duration-700 ease-out ${
                 occupancyPercent > 90 ? "bg-red-500" : "bg-indigo-600"
@@ -91,32 +85,31 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Stats Grid */}
+        {/* Classroom Info Grid */}
         <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="p-4 bg-indigo-50 rounded-xl border border-indigo-100">
-            <div className="flex items-center gap-2 mb-1">
+          <div className="p-4 bg-indigo-50 rounded-xl border border-indigo-100 flex flex-col items-start">
+            <span className="text-[10px] uppercase tracking-wider font-bold text-indigo-400 mb-1">Live Status</span>
+            <div className="flex items-center gap-2">
               <Zap className="w-4 h-4 text-indigo-600" />
-              <span className="text-[10px] uppercase tracking-wider font-bold text-indigo-400">Live Status</span>
+              <p className="text-indigo-900 font-bold text-sm">Connected</p>
             </div>
-            <p className="text-indigo-900 font-bold text-lg">Connected</p>
           </div>
 
-          <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
-            <div className="flex items-center gap-2 mb-1">
-              <Users className="w-4 h-4 text-gray-600" />
-              <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Current</span>
-            </div>
-            <p className="text-gray-900 font-bold text-lg">{occupied} Persons</p>
+          <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 flex flex-col items-start">
+            <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400 mb-1">Room</span>
+            <p className="text-gray-900 font-semibold text-sm">
+              Block {classroom.block}, Floor {classroom.floor}, Room {classroom.roomNumber}
+            </p>
           </div>
         </div>
 
-        {/* Action Button */}
-        <button 
+        {/* Reset Button */}
+        <button
           onClick={handleReset}
-          className="w-full py-3 flex items-center justify-center gap-2 text-sm font-medium text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors border border-dashed border-gray-200"
+          className="w-full py-3 flex items-center justify-center gap-2 text-sm font-medium text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-2xl transition-colors border border-dashed border-gray-200"
         >
           <RotateCcw className="w-4 h-4" />
-          Reset Counter to Zero
+          Reset Counter
         </button>
 
       </div>
