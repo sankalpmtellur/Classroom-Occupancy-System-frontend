@@ -11,8 +11,8 @@ export default function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const USERNAME = "admin@gmail.com";
-  const PASSWORD = "12345";
+  const USERNAME = "admin@rishihood.edu.in";
+  const PASSWORD = "12345678";
 
   const handleLogin = (e) => {
     e.preventDefault();
